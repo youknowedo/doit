@@ -1,1 +1,1 @@
-export { handle } from '$lib/hooks/auth';
+export { handle } from '$lib/server/auth';
