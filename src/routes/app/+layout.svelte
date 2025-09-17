@@ -1,5 +1,9 @@
 <script lang="ts">
-	import { SignOut } from '@auth/sveltekit/components';
+	import Header from '$lib/components/Header.svelte';
+
+	const { children } = $props();
 </script>
 
-<SignOut></SignOut>
+<Header />
+
+{@render children?.()}
