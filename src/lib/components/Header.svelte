@@ -4,9 +4,9 @@
 	import { Button } from './ui/button';
 </script>
 
-<div class="border-b">
+<div class="mb-8 border-b">
 	<div class="items-center gap-4 grid grid-cols-[1fr_auto_1fr] mx-auto py-4 container">
-		<div></div>
+		<div>doit</div>
 
 		<div>
 			<NavigationMenu

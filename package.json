@@ -54,5 +54,8 @@
 			"esbuild",
 			"prisma"
 		]
+	},
+	"dependencies": {
+		"@thisux/sveltednd": "^0.0.20"
 	}
 }
