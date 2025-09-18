@@ -64,7 +64,6 @@
 			use:draggable={{
 				container: container,
 				dragData: { id: task.id },
-				callbacks: { onDragStart: () => console.log('Dragging:', task.name) }
 			}}
 		>
 			<Table.Cell class="flex items-center">
@@ -135,7 +134,12 @@
 
 				<Table.Root>
 					<Table.Body>
-						{#each $tasks.filter((task) => task.date?.valueOf() === DATES_OF_WEEK[DAYS_OF_WEEK.findIndex((d) => d === day)].valueOf()) as task}
+						{#each $tasks.filter((task) => {
+							if (!task.date) return false;
+							const taskDay = task.date.getDay();
+							const currentDay = DATES_OF_WEEK[DAYS_OF_WEEK.findIndex((d) => d === day)].getDay();
+							return taskDay === currentDay;
+						}) as task}
 							{@render row(task, day)}
 						{/each}
 
@@ -171,5 +175,3 @@
 		{/each}
 	</div>
 </div>
-
-{JSON.stringify($tasks)}

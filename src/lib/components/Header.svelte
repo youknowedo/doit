@@ -13,11 +13,6 @@
 				items={[
 					{
 						type: 'link',
-						label: 'Home',
-						href: '/app'
-					},
-					{
-						type: 'link',
 						label: 'Tasks',
 						href: '/app/tasks'
 					},
