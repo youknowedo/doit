@@ -5,36 +5,38 @@
 	import * as Table from '$lib/components/ui/table';
 	import { tasks } from '$lib/state/tasks.svelte';
 	import { Trash2 } from '@lucide/svelte';
+	import type { PageProps } from './$types';
 
 	let newTaskName = $state('');
+
+	const { data }: PageProps = $props();
+	const { board } = data;
 </script>
 
 <div class="mx-auto container">
-	<div
-		class="border rounded-lg"
-	>
+	<div class="border rounded-lg">
 		<Table.Root>
 			<Table.Body>
 				{#each $tasks as task}
-						<Table.Row>
-							<Table.Cell class="w-0">
-								<Checkbox bind:checked={task.completed} />
-							</Table.Cell>
-							<Table.Cell>
-								{task.name}
-							</Table.Cell>
-							<Table.Cell class="flex justify-end">
-								<Button
-									variant="ghost"
-									class="hover:text-destructive"
-									onclick={() => {
-										tasks.update((current) => current.filter((t) => t !== task));
-									}}
-								>
-									<Trash2 />
-								</Button>
-							</Table.Cell>
-						</Table.Row>
+					<Table.Row>
+						<Table.Cell class="w-0">
+							<Checkbox bind:checked={task.completed} />
+						</Table.Cell>
+						<Table.Cell>
+							{task.name}
+						</Table.Cell>
+						<Table.Cell class="flex justify-end">
+							<Button
+								variant="ghost"
+								class="hover:text-destructive"
+								onclick={() => {
+									tasks.update((current) => current.filter((t) => t !== task));
+								}}
+							>
+								<Trash2 />
+							</Button>
+						</Table.Cell>
+					</Table.Row>
 				{/each}
 
 				<Table.Row>
@@ -45,10 +47,12 @@
 								type="submit"
 								onclick={() => {
 									if (newTaskName) {
-										tasks.update((current) => [
-											...current,
-											{ id: newTaskName,  name: newTaskName, completed: false }
-										]);
+										tasks.add({
+											name: newTaskName,
+											completed: false,
+											priority: 'LOW',
+											boardId: board.id
+										});
 										newTaskName = '';
 									}
 								}}
@@ -62,4 +66,3 @@
 		</Table.Root>
 	</div>
 </div>
-

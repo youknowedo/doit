@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { SignOut } from '@auth/sveltekit/components';
 	import NavigationMenu from './NavigationMenu.svelte';
-	import { Button } from './ui/button';
+	import { Button, buttonVariants } from './ui/button';
 </script>
 
 <div class="mb-8 border-b">
@@ -14,17 +14,17 @@
 					{
 						type: 'link',
 						label: 'Tasks',
-						href: '/app/tasks'
+						href: 'tasks'
 					},
 					{
 						type: 'link',
 						label: 'Week',
-						href: '/app/week'
+						href: 'week'
 					},
 					{
 						type: 'link',
 						label: 'Calendar',
-						href: '/app/calendar'
+						href: 'calendar'
 					}
 				]}
 			/>
@@ -33,7 +33,9 @@
 		<div class="flex justify-end">
 			<SignOut>
 				<div class="flex" slot="submitButton">
-					<Button variant="destructive">Sign Out</Button>
+					<div class={[buttonVariants({ variant: 'destructive' }), 'hover:cursor-pointer']}>
+						Sign Out
+					</div>
 				</div>
 			</SignOut>
 		</div>

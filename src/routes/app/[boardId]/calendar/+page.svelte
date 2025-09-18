@@ -6,6 +6,7 @@
 	import { tasks, type Task } from '$lib/state/tasks.svelte';
 	import { Trash2 } from '@lucide/svelte';
 	import { draggable, droppable, type DragDropState } from '@thisux/sveltednd';
+	import type { PageProps } from './$types';
 
 	function handleDrop(state: DragDropState<{ id: string }>) {
 		const { draggedItem, sourceContainer, targetContainer } = state;
@@ -30,6 +31,9 @@
 	currentDate.setUTCHours(0, 0, 0, 0);
 
 	let newTaskName = $state('');
+
+	const { data }: PageProps = $props();
+	const { board } = data;
 </script>
 
 {#snippet row(task: Task, container: string)}
@@ -84,7 +88,17 @@
 									if (newTaskName) {
 										tasks.update((current) => [
 											...current,
-											{ id: newTaskName, name: newTaskName, completed: false }
+											{
+												id: newTaskName,
+												name: newTaskName,
+												completed: false,
+												date: currentDate,
+												hasTime: false,
+												boardId: board.id,
+												createdAt: new Date(),
+												priority: 'LOW',
+												endDate: null
+											}
 										]);
 										newTaskName = '';
 									}
@@ -117,7 +131,7 @@
 				>
 				{#each $tasks.filter((task) => {
 					const date = task.date && new Date(task.date);
-					return date && date.getHours() === slot.hour && date.getMinutes() === slot.minute;
+					return date && date.getUTCHours() === slot.hour && date.getUTCMinutes() === slot.minute;
 				}) as task}
 					{@render row(task, `${slot.hour}:${slot.minute}`)}
 				{/each}

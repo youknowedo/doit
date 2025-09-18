@@ -1,12 +1,13 @@
+import type { prisma } from '$lib/server/prisma';
 import { writable } from 'svelte/store';
+import type { load } from '../../routes/app/[boardId]/+layout.server';
 
-export type Task = {
-	id?: string;
-	name: string;
-	completed: boolean;
-	date?: Date;
-	endDate?: Date;
-	priority?: 'low' | 'medium' | 'high';
+export type CreateTask = Parameters<typeof prisma.task.create>[0]['data'];
+export type Task = Awaited<ReturnType<typeof load>>['board']['tasks'][number];
+
+export const tasks = {
+	...writable<Task[]>([]),
+	add: (task: CreateTask) => {
+		tasks.update((ts) => [...ts, task as Task]);
+	}
 };
-
-export const tasks = writable<Task[]>([]);

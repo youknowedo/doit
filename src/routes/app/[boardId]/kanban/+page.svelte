@@ -5,8 +5,8 @@
 	import * as Table from '$lib/components/ui/table';
 	import { tasks, type Task } from '$lib/state/tasks.svelte';
 	import { Trash2 } from '@lucide/svelte';
-
 	import { draggable, droppable, type DragDropState } from '@thisux/sveltednd';
+	import type { PageProps } from './$types';
 
 	const DAYS_OF_WEEK = [
 		'monday',
@@ -32,9 +32,8 @@
 
 		if (targetContainer === 'unordered') {
 			tasks.update((current) =>
-				current.map((task) => (task.id === draggedItem.id ? { ...task, date: undefined } : task))
+				current.map((task) => (task.id === draggedItem.id ? { ...task, date: null } : task))
 			);
-			return;
 		}
 
 		const date = DATES_OF_WEEK[DAYS_OF_WEEK.findIndex((d) => d === targetContainer)];
@@ -55,6 +54,9 @@
 		saturday: '',
 		sunday: ''
 	};
+
+	const { data }: PageProps = $props();
+	const { board } = data;
 </script>
 
 {#snippet row(task: Task, container: (typeof DAYS_OF_WEEK)[number] | 'unordered')}
@@ -63,7 +65,7 @@
 			class="flex flex-grow items-stretch"
 			use:draggable={{
 				container: container,
-				dragData: { id: task.id },
+				dragData: { id: task.id }
 			}}
 		>
 			<Table.Cell class="flex items-center">
@@ -107,10 +109,12 @@
 								type="submit"
 								onclick={() => {
 									if (newTaskName) {
-										tasks.update((current) => [
-											...current,
-											{ id: newTaskName.unordered, name: newTaskName.unordered, completed: false }
-										]);
+										tasks.add({
+											name: newTaskName.unordered,
+											completed: false,
+											priority: 'LOW',
+											boardId: board.id
+										});
 										newTaskName.unordered = '';
 									}
 								}}
@@ -151,15 +155,13 @@
 										type="submit"
 										onclick={() => {
 											if (newTaskName) {
-												tasks.update((current) => [
-													...current,
-													{
-														id: newTaskName[day],
-														name: newTaskName[day],
-														completed: false,
-														date: DATES_OF_WEEK[DAYS_OF_WEEK.findIndex((d) => d === day)]
-													}
-												]);
+												tasks.add({
+													name: newTaskName[day],
+													completed: false,
+													priority: 'LOW',
+													date: DATES_OF_WEEK[DAYS_OF_WEEK.findIndex((d) => d === day)],
+													boardId: board.id
+												});
 												newTaskName[day] = '';
 											}
 										}}
